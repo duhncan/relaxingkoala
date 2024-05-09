@@ -1,0 +1,27 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Relaxing Koala {% endblock %}
+
+{% block content %}
+<!-- [ Main Content ] start -->
+<div class="pc-container">
+  <div class="pc-content" style="background: #FCE4EC; text-align: center;">
+    <!-- [ Hero Section ] start -->
+    <div class="hero-section" style="padding: 450px 20px;">
+      <h1 style="font-size: 48px; color: #333;">Get your Relaxing Koala fix now!</h1>
+      <p style="font-size: 24px; margin-top: 20px; color: #555;">Order all of your favorites via takeaway, dine-in or delivery.</p>
+      <button style="font-size: 20px; background-color: #FF4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer;">
+        Order Now
+      </button>
+    </div>
+    <!-- [ Hero Section ] end -->
+    <!-- [ Display Foods ] start -->
+<div style="margin-top: 30px;">
+  <img src="{{ url_for('static', filename='assets/images/user/avatar-3.jpg') }}" alt="Relaxing Koala Dishes" style="max-width: 100%; height: auto; border-radius: 8px;">
+</div>
+
+    <!-- [ Display Foods ] end -->
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+{% endblock %}
