@@ -1,0 +1,77 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Report{% endblock %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="page-header">
+            <h5 class="m-b-10">Report</h5>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Reports</li>
+            </ul>
+        </div>
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-header bg-transparent border-0 text-center">
+                            <h1>Select Report Type</h1>
+                        </div>
+                        <div class="card-body">
+                            <form id="reportForm" method="post">
+                                <div class="mb-4">
+                                    <label for="reportType" class="form-label">Report Type</label>
+                                    <select class="form-control" id="reportType" name="reportType">
+                                        <option value="sales">Sales (Finances / Total Revenue)</option>
+                                        <option value="items_sold">Most Sold Items</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="reportOutput" class="card mt-4">
+                        <!-- Report data will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('reportForm').onsubmit = function(event) {
+        event.preventDefault();
+        fetchReport();
+    };
+
+    function fetchReport() {
+        const reportType = document.getElementById('reportType').value;
+        fetch(`/api/reports/${reportType}`)
+            .then(response => response.json())
+            .then(data => {
+                const reportDiv = document.getElementById('reportOutput');
+                reportDiv.innerHTML = ''; // Clear previous reports
+                if (data && data.length > 0) {
+                    const table = document.createElement('table');
+                    table.className = 'table table-hover';
+                    // Populate table with data based on report type
+                    data.forEach(item => {
+                        const row = table.insertRow();
+                        for (let key in item) {
+                            let cell = row.insertCell();
+                            cell.textContent = item[key];
+                        }
+                    });
+                    reportDiv.appendChild(table);
+                } else {
+                    reportDiv.innerHTML = '<p>No data available for this report type.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching report:', error);
+            });
+    }
+</script>
+{% endblock %}

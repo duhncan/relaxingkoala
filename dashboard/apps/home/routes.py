@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
@@ -76,6 +76,15 @@ def table_page():
 @login_required
 def report_page():
     return render_template('pages/report-page.html')  
+
+def get_report(report_type):
+    if report_type == 'sales':
+        data = [{'Month': 'January', 'Revenue': 10000}, {'Month': 'February', 'Revenue': 15000}]
+    elif report_type == 'items_sold':
+        data = [{'Item': 'Widget', 'Sold': 120}, {'Item': 'Gadget', 'Sold': 90}]
+    else:
+        data = []
+    return jsonify(data)
 
 @blueprint.route('/accounts/password-reset/')
 def password_reset():
