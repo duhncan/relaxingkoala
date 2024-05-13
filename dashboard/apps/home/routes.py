@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from apps.home import blueprint
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_required
 from jinja2 import TemplateNotFound
 
@@ -47,6 +47,44 @@ def order_page():
 @login_required
 def menu_page():
     return render_template('pages/menu-page.html')  
+
+@blueprint.route('/reservation-page')
+@login_required
+def reservation_page():
+    return render_template('pages/reservation-page.html')
+
+@blueprint.route('/reservation_submit', methods=['POST'])
+@login_required
+def reservation_submit():
+    # Extract form data
+    date = request.form.get('date')
+    time = request.form.get('time')
+    people = request.form.get('people')
+    name = request.form.get('name')
+    phone = request.form.get('phone')
+    
+
+    
+    return redirect(url_for('home_blueprint.table_page'))
+
+@blueprint.route('/table-page')
+@login_required
+def table_page():
+    return render_template('pages/table-page.html')  
+
+@blueprint.route('/report-page')
+@login_required
+def report_page():
+    return render_template('pages/report-page.html')  
+
+def get_report(report_type):
+    if report_type == 'sales':
+        data = [{'Month': 'January', 'Revenue': 10000}, {'Month': 'February', 'Revenue': 15000}]
+    elif report_type == 'items_sold':
+        data = [{'Item': 'Widget', 'Sold': 120}, {'Item': 'Gadget', 'Sold': 90}]
+    else:
+        data = []
+    return jsonify(data)
 
 @blueprint.route('/accounts/password-reset/')
 def password_reset():
