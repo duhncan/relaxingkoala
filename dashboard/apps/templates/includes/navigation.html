@@ -153,6 +153,43 @@
       </div>
     </li>
 
+
+    <li class="dropdown pc-h-item">
+      <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+          role="button" aria-haspopup="false" aria-expanded="false">
+          <i class="ti ti-shopping-cart"></i>
+      </a>
+      <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+          <div class="dropdown-header">
+              <h5>Cart Items <span class="badge bg-warning rounded-pill ms-1">3</span></h5>
+          </div>
+          <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+              style="max-height: calc(100vh - 215px)">
+              <!-- List group items for each product in the cart -->
+              <div class="list-group list-group-flush w-100">
+                  <a class="list-group-item list-group-item-action">
+                      <div class="d-flex">
+                          <div class="flex-shrink-0">
+                              <img src="{{ url_for('static', filename='assets/images/product/product-1.jpg') }}" alt="product-image" class="user-avtar" />
+                          </div>
+                          <div class="flex-grow-1 ms-1">
+                              <h5>Product Name</h5>
+                              <p class="text-body fs-6">Quantity: 1</p>
+                              <div class="badge rounded-pill bg-light-info">Price: $20</div>
+                          </div>
+                      </div>
+                  </a>
+                  <!-- Repeat for other products -->
+              </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="text-center py-2">
+              <a href="{{ url_for('home_blueprint.order_page') }}" class="link-primary">View Cart</a>
+          </div>
+      </div>
+  </li>
+  
+
     <li class="dropdown pc-h-item header-user-profile">
       <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
         role="button" aria-haspopup="false" aria-expanded="false">

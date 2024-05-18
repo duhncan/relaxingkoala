@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Relaxing Koala {% endblock %}
+
+{% block content %}
+<!-- [ Main Content ] start -->
+
+<div class="pc-container">
+  <div class="pc-content" style="background: #FCE4EC; text-align: center; position: relative;">
+    <!-- Koala Image at the top left corner inside the content area -->
+    <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
+      <img src="{{ url_for('static', filename='assets/images/user/koala-website.png') }}" alt="Koala" style="width: 500px; height: auto;">
+    </div>
+    <!-- [ Hero Section ] start -->
+    <div class="hero-section" style="padding: 450px 20px;">
+      <h1 style="font-size: 48px; color: #333;">Get your Relaxing Koala now!</h1>
+      <p style="font-size: 24px; margin-top: 20px; color: #555;">Order all of your favorites via dine-in or delivery.</p>
+
+  <a href="{{ url_for('home_blueprint.menu_page') }}" style="text-decoration: none;">
+    <button style="font-size: 20px; background-color: #FF4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer;">
+      View Menu
+    </button>
+</a>
+
+    </div>
+    <!-- [ Hero Section ] end -->
+    <!-- [ Display Foods ] start -->
+    <!-- [ Display Foods ] end -->
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+{% endblock %}

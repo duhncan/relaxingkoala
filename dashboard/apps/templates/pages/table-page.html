@@ -1,0 +1,196 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Table Availability{% endblock %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Table Availability</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/reservation-page">Reservation</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Table Availability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card shadow">
+                        <div class="card-header bg-transparent border-0 text-center">
+                            <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
+                                <img src="{{ url_for('static', filename='assets/images/user/koala-website.png') }}"
+                                    alt="Koala" style="width: 70px; height: auto;">
+                            </div>
+                            <h1>Table Status</h1>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Table Number</th>
+                                        <th>Seats</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-danger">
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>Unavailable</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-danger">
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>Unavailable</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-danger">
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>Unavailable</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td>1</td>
+                                        <td>4</td>
+                                        <td>Available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Table navigation">
+                                <ul class="pagination justify-content-center">
+                                </ul>
+                            </nav>
+                            <button type="button" id="confirmBtn" class="btn btn-primary w-100" disabled>Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const rowsPerPage = 8;
+    const rows = document.querySelectorAll('.table tbody tr');
+    const pageCount = Math.ceil(rows.length / rowsPerPage);
+    let currentPage = 1;
+    
+    document.querySelectorAll('.table tbody tr').forEach(row => {
+        row.addEventListener('click', function() {
+            const current = document.querySelector('.table-selected');
+            if (current) current.classList.remove('table-selected');
+            row.classList.add('table-selected');
+            document.getElementById('confirmBtn').disabled = false;
+        });
+    });
+    
+    function setupPagination() {
+        const paginationContainer = document.querySelector('.pagination');
+        paginationContainer.innerHTML = '';
+        const prevLi = document.createElement('li');
+        prevLi.className = 'page-item';
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link';
+        prevLink.href = '#';
+        prevLink.innerText = 'Previous';
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+    
+        for (let i = 1; i <= pageCount; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.className = 'page-item';
+            const pageLink = document.createElement('a');
+            pageLink.className = 'page-link';
+            pageLink.href = '#';
+            pageLink.innerText = i;
+            pageLink.onclick = function() { setCurrentPage(i); };
+            pageLi.appendChild(pageLink);
+            paginationContainer.appendChild(pageLi);
+        }
+    
+        const nextLi = document.createElement('li');
+        nextLi.className = 'page-item';
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link';
+        nextLink.href = '#';
+        nextLink.innerText = 'Next';
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+    
+        updatePaginationButtons();
+    }
+    
+    function updatePaginationButtons() {
+        const paginationLinks = document.querySelectorAll('.pagination .page-link');
+        paginationLinks.forEach(link => {
+            const pageItem = link.parentElement;
+            if (link.innerText === 'Previous') {
+                pageItem.classList.toggle('disabled', currentPage === 1);
+                link.onclick = function() { if (currentPage > 1) setCurrentPage(currentPage - 1); };
+            } else if (link.innerText === 'Next') {
+                pageItem.classList.toggle('disabled', currentPage === pageCount);
+                link.onclick = function() { if (currentPage < pageCount) setCurrentPage(currentPage + 1); };
+            } else {
+                const pageNumber = parseInt(link.innerText);
+                pageItem.classList.toggle('active', pageNumber === currentPage);
+            }
+        });
+    }
+    
+    function setCurrentPage(page) {
+        currentPage = page;
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+        updatePaginationButtons();
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        setupPagination();
+        setCurrentPage(1); // Start with the first page
+    });
+    </script>
+    
+
+{% endblock %}
