@@ -1,0 +1,30 @@
+<body>
+    <div class="container mt-5">
+        <h1>Manage Menu Items</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td><img src="../static/assets/images/menu_pics/{{item.image_file}}" alt="{{ item.name }}" style="width: 100px;"></td>
+                        <td>{{ item.name }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('home_blueprint.delete_menu_item', item_id=item.id) }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+    </div>
+</body>
