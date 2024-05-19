@@ -11,9 +11,10 @@
 
 from . import menu
 
+
 class Restaraunt:
-  def __init__(self):
-    self.current_orders = []
-    self.staff_on_duty = []
-    self.available_tables = []
-    self.active_menu = menu.Menu()
+    def __init__(self):
+        self.current_orders = []
+        self.staff_on_duty = []
+        self.available_tables = []
+        self.active_menu = menu.Menu()

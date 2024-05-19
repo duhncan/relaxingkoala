@@ -9,20 +9,26 @@
 
 """
 
+
 class User:
     pass
+
 
 class Staff(User):
     pass
 
+
 class Manager(Staff):
     pass
+
 
 class KitchenStaff(Staff):
     pass
 
+
 class WaitStaff(Staff):
     pass
+
 
 class Customer(User):
     pass

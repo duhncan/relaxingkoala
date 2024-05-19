@@ -9,8 +9,10 @@
 
 """
 
+
 class Menu:
     pass
+
 
 class MenuItem:
     pass
