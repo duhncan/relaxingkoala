@@ -17,26 +17,6 @@ from apps.home.utils import save_picture, delete_picture
 def index():
     return render_template('pages/index.html', segment='index')
 
-@blueprint.route('/typography')
-@login_required
-def typography():
-    return render_template('pages/typography.html')
-
-@blueprint.route('/color')
-@login_required
-def color():
-    return render_template('pages/color.html')
-
-@blueprint.route('/icon-tabler')
-@login_required
-def icon_tabler():
-    return render_template('pages/icon-tabler.html')
-
-@blueprint.route('/sample-page')
-@login_required
-def sample_page():
-    return render_template('pages/sample-page.html')  
-
 @blueprint.route('/home-page')
 @login_required
 def home_page():
@@ -62,9 +42,6 @@ def reservation_submit():
     people = request.form.get('people')
     name = request.form.get('name')
     phone = request.form.get('phone')
-    
-
-    
     return redirect(url_for('home_blueprint.table_page'))
 
 @blueprint.route('/table-page')
