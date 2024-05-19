@@ -6,10 +6,11 @@ from apps.home import blueprint
 from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required
 from jinja2 import TemplateNotFound
+import os
 
-from apps import db
 from apps.home.models import *
 from apps.home.forms import *
+from apps.home.utils import save_picture, delete_picture
 
 @blueprint.route('/index')
 @login_required
@@ -46,10 +47,6 @@ def home_page():
 def order_page():
     return render_template('pages/order-page.html')  
 
-@blueprint.route('/menu-page')
-@login_required
-def menu_page():
-    return render_template('pages/menu-page.html')  
 
 @blueprint.route('/reservation-page')
 @login_required
@@ -118,24 +115,117 @@ Report
 """
 
 
+
+"""
+Menu Related
+"""
+
+@blueprint.route('/menu-page')
+def menu_page():
+    return render_template('pages/menu-page.html')
+
+@blueprint.route('/menu')
+def menu_items():
+    items = MenuItem.query.all()
+    return render_template('pages/menu.html', items=items)
+
+@blueprint.route('/menu/add_item', methods=['GET', 'POST'])
+def new_menu_item():
+    form = MenuItemForm()
+    if form.validate_on_submit():
+        if form.image_file.data:
+            picture_file = save_picture(form.image_file.data)
+        else:
+            picture_file = 'default.jpg'
+        menu_item = MenuItem(name=form.name.data, price=form.price.data, image_file=picture_file)
+        db.session.add(menu_item)
+        db.session.commit()
+        flash('Menu item has been created!', 'success')
+        return redirect(url_for('home_blueprint.menu_items'))
+    return render_template('pages/add_menu_item.html', title='New Menu Item', form=form)
+
+@blueprint.route('/menu/manage', methods=['GET', 'POST'])
+def manage_menu_items():
+    items = MenuItem.query.all()
+    return render_template('pages/manage_menu_items.html', items=items)
+
+@blueprint.route('/menu/delete/<int:item_id>', methods=['POST'])
+def delete_menu_item(item_id):
+    item = MenuItem.query.get_or_404(item_id)
+    if item.image_file != 'default.jpg':
+        picture_path = delete_picture(item.image_file)
+    db.session.delete(item)
+    db.session.commit()
+    flash('Menu item has been deleted!', 'success')
+    return redirect(url_for('home_blueprint.manage_menu_items'))
+
 """
 Payment
 """
-@blueprint.route('/payment/<float:amount>', methods=['GET', 'POST'])
-def payment(amount):
-    form = PaymentForm(amount=amount)
-    if form.validate_on_submit():
-        payment = Payment(
-            payer_name=form.payer_name.data,
-            email=form.email.data,
-            amount=form.amount.data,
-            status='Confirmed'
-        )
-        db.session.add(payment)
-        db.session.commit()
-        flash('Payment successfully processed!', 'success')
-        return redirect(url_for('confirmation', payment_id=payment.id))
-    return render_template('pages/payment.html', form=form, amount=amount)
+@blueprint.route('/make_payment', methods=['GET', 'POST'])
+def make_payment():
+    search_form = OrderSearchForm()
+    order_form = OrderSelectionForm()
+    orders = []
+
+    if search_form.validate_on_submit():
+        search_query = search_form.search_query.data
+        orders = Order.query.filter(
+            (Order.customer_name.ilike(f"%{search_query}%")) |
+            (Order.email.ilike(f"%{search_query}%"))
+        ).all()
+        
+        if not orders:
+            flash('No orders found for the given details.', 'danger')
+        else:
+            order_form.order_id.choices = [(order.id, f"Order #{order.id} - ${order.total_amount}") for order in orders]
+            return render_template('pages/select_order.html', search_form=search_form, order_form=order_form, orders=orders)
+
+    if order_form.validate_on_submit():
+        order = Order.query.get(order_form.order_id.data)
+        if not order:
+            flash('Order not found.', 'danger')
+            return redirect(url_for('.make_payment'))
+
+        if order_form.payment_type.data == 'cash':
+            payment = CashPayment(
+                payer_name=order_form.payer_name.data,
+                email=order_form.email.data,
+                amount=order.total_amount,
+                status='Completed',
+                payment_date=datetime.utcnow(),
+                order_id=order.id
+            )
+            order.payment_status = 'Paid'
+            db.session.add(payment)
+            db.session.commit()
+            flash('Cash payment made successfully!', 'success')
+            return redirect(url_for('.make_payment'))
+
+        elif order_form.payment_type.data == 'card':
+            card_form = CardPaymentForm()
+            if card_form.validate_on_submit():
+                payment = CardPayment(
+                    payer_name=order_form.payer_name.data,
+                    email=order_form.email.data,
+                    amount=order.total_amount,
+                    status='Completed',
+                    payment_date=datetime.utcnow(),
+                    order_id=order.id,
+                    card_number=card_form.card_number.data,
+                    card_expiration_date=card_form.card_expiration_date.data,
+                    card_cvv=card_form.card_cvv.data
+                )
+                order.payment_status = 'Paid'
+                db.session.add(payment)
+                db.session.commit()
+                flash('Card payment made successfully!', 'success')
+                return redirect(url_for('.make_payment'))
+            else:
+                flash('Card payment details are invalid.', 'danger')
+                return render_template('pages/select_order.html', search_form=search_form, order_form=order_form, card_form=card_form)
+
+    return render_template('pages/make-payment.html', search_form=search_form, order_form=order_form, orders=orders)
 
 
 @blueprint.route('/confirmation/<int:order_id>')
@@ -143,21 +233,15 @@ def confirmation(order_id):
     order = Order.query.get_or_404(order_id)
     return render_template('pages/confirmation.html', order=order)
 
+
+"""
+Ordering
+"""
+
 @blueprint.route('/order/<float:order_amount>')
 def order(order_amount):
     return redirect(url_for('payment', amount=order_amount))
 
-
-@blueprint.route('/add_menu_item', methods=['GET', 'POST'])
-def add_menu_item():
-    form = MenuItemForm()
-    if form.validate_on_submit():
-        item = MenuItem(name=form.name.data, price=form.price.data)
-        db.session.add(item)
-        db.session.commit()
-        flash('Menu item added successfully!', 'success')
-        return redirect('/add_menu_item')
-    return render_template('pages/add_menu_item.html', form=form)
 
 @blueprint.route('/create_order', methods=['GET', 'POST'])
 def create_order():
@@ -169,15 +253,15 @@ def create_order():
         order = Order(
             customer_name=form.customer_name.data,
             email=form.email.data,
+            phone_number=form.phone_number.data if form.phone_number.data else None,  # Handle optional phone number
             items=items,
             total_amount=total_amount
         )
         db.session.add(order)
         db.session.commit()
         flash('Order placed successfully!', 'success')
-        return redirect(url_for('pages/confirmation', order_id=order.id))
+        return redirect(url_for('home_blueprint.confirmation', order_id=order.id))
     else:
-        # If the form is not valid, flash error messages
         for field, errors in form.errors.items():
             for error in errors:
                 flash(f"Error in the {getattr(form, field).label.text} field - {error}", 'danger')
@@ -189,6 +273,9 @@ def list_orders():
     return render_template('pages/list_orders.html', orders=orders)
 
 
+"""
+Reservation & Tables
+"""
 
 @blueprint.route('/add_table', methods=['GET', 'POST'])
 def add_table():
@@ -213,6 +300,7 @@ def reserve_table():
             reservation = Reservation(
                 customer_name=form.customer_name.data,
                 email=form.email.data,
+                phone_number=form.phone_number.data,
                 table_id=form.table_id.data,
                 reservation_time=reservation_datetime
             )
@@ -236,9 +324,7 @@ def available_tables():
     available_tables = Table.query.filter(~Table.id.in_(reserved_table_ids)).all()
     return render_template('pages/available_tables.html', tables=available_tables)
 
-"""
-Reservation
-"""
+
 
 
 

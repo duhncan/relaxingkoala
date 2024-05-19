@@ -22,3 +22,8 @@ def save_picture(form_picture, output_size=(300, 300)):
     
     print(f"Saved file at location: {picture_path}")
     return picture_fn
+
+def delete_picture(picture_name):
+    picture_path = os.path.join(current_app.root_path, 'static/assets/images/menu_pics', picture_name)
+    if os.path.exists(picture_path):
+        os.remove(picture_path)
