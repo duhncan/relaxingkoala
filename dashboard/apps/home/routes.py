@@ -120,10 +120,6 @@ Report
 Menu Related
 """
 
-@blueprint.route('/menu-page')
-def menu_page():
-    return render_template('pages/menu-page.html')
-
 @blueprint.route('/menu')
 def menu_items():
     items = MenuItem.query.all()
@@ -134,7 +130,7 @@ def new_menu_item():
     form = MenuItemForm()
     if form.validate_on_submit():
         if form.image_file.data:
-            picture_file = save_picture(form.image_file.data)
+            picture_file = save_picture(form.image_file.data, output_size=(300, 300))
         else:
             picture_file = 'default.jpg'
         menu_item = MenuItem(name=form.name.data, price=form.price.data, image_file=picture_file)
