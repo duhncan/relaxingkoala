@@ -133,37 +133,34 @@ def delete_menu_item(item_id):
     return redirect(url_for('home_blueprint.manage_menu_items'))
 
 """
-Payment
+Payment & Ordering
 """
-@blueprint.route('/make_payment', methods=['GET', 'POST'])
-def make_payment():
-    search_form = OrderSearchForm()
-    order_form = OrderSelectionForm()
-    orders = []
 
-    if search_form.validate_on_submit():
-        search_query = search_form.search_query.data
-        orders = Order.query.filter(
-            (Order.customer_name.ilike(f"%{search_query}%")) |
-            (Order.email.ilike(f"%{search_query}%"))
-        ).all()
-        
-        if not orders:
-            flash('No orders found for the given details.', 'danger')
-        else:
-            order_form.order_id.choices = [(order.id, f"Order #{order.id} - ${order.total_amount}") for order in orders]
-            return render_template('pages/select_order.html', search_form=search_form, order_form=order_form, orders=orders)
+@blueprint.route('/confirmation/<int:order_id>')
+def confirmation(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('pages/order_confirmation.html', order=order)
 
-    if order_form.validate_on_submit():
-        order = Order.query.get(order_form.order_id.data)
-        if not order:
-            flash('Order not found.', 'danger')
-            return redirect(url_for('.make_payment'))
+@blueprint.route('/order/<int:order_id>/payment', methods=['GET', 'POST'])
+def payment(order_id):
+    # Retrieve the order from the database
+    order = Order.query.get_or_404(order_id)
 
-        if order_form.payment_type.data == 'cash':
+    # Check if the order has already been paid
+    if order.payment_status == 'Paid':
+        flash('This order has already been paid.', 'warning')
+        return redirect(url_for('home_blueprint.confirmation', order_id=order_id))
+
+    # Handle the payment process for both cash and card
+    cash_form = CashPaymentForm()
+    card_form = CardPaymentForm()
+    if request.form.get('payment_type') == 'cash':
+        if cash_form.validate_on_submit():
+            # Check if the payment method matches 'cash'
+            # Handle Cash Payment
             payment = CashPayment(
-                payer_name=order_form.payer_name.data,
-                email=order_form.email.data,
+                payer_name=cash_form.payer_name.data,
+                email=cash_form.email.data,
                 amount=order.total_amount,
                 status='Completed',
                 payment_date=datetime.utcnow(),
@@ -173,51 +170,47 @@ def make_payment():
             db.session.add(payment)
             db.session.commit()
             flash('Cash payment made successfully!', 'success')
-            return redirect(url_for('.make_payment'))
+            return redirect(url_for('home_blueprint.confirmation', order_id=order_id))
+        else:
+            for field, errors in cash_form.errors.items():
+                for error in errors:
+                    flash(f'Error in {field}: {error}', 'danger')
+    elif request.form.get('payment_type') == 'card':
 
-        elif order_form.payment_type.data == 'card':
-            card_form = CardPaymentForm()
-            if card_form.validate_on_submit():
-                payment = CardPayment(
-                    payer_name=order_form.payer_name.data,
-                    email=order_form.email.data,
-                    amount=order.total_amount,
-                    status='Completed',
-                    payment_date=datetime.utcnow(),
-                    order_id=order.id,
-                    card_number=card_form.card_number.data,
-                    card_expiration_date=card_form.card_expiration_date.data,
-                    card_cvv=card_form.card_cvv.data
-                )
-                order.payment_status = 'Paid'
-                db.session.add(payment)
-                db.session.commit()
-                flash('Card payment made successfully!', 'success')
-                return redirect(url_for('.make_payment'))
-            else:
-                flash('Card payment details are invalid.', 'danger')
-                return render_template('pages/select_order.html', search_form=search_form, order_form=order_form, card_form=card_form)
-
-    return render_template('pages/make-payment.html', search_form=search_form, order_form=order_form, orders=orders)
-
-
-@blueprint.route('/confirmation/<int:order_id>')
-def confirmation(order_id):
-    order = Order.query.get_or_404(order_id)
-    return render_template('pages/confirmation.html', order=order)
-
-
-"""
-Ordering
-"""
-
-@blueprint.route('/order/<float:order_amount>')
-def order(order_amount):
-    return redirect(url_for('payment', amount=order_amount))
+        if card_form.validate_on_submit():
+            # Check if the payment method matches 'card'
+            # Handle Card Payment
+            payment = CardPayment(
+                payer_name=card_form.payer_name.data,
+                email=card_form.email.data,
+                amount=order.total_amount,
+                status='Completed',
+                payment_date=datetime.utcnow(),
+                order_id=order.id,
+                card_number=card_form.card_number.data,
+                card_expiration_date=card_form.card_expiration_date.data,
+                card_cvv=card_form.card_cvv.data
+            )
+            order.payment_status = 'Paid'
+            db.session.add(payment)
+            db.session.commit()
+            flash('Card payment made successfully!', 'success')
+            return redirect(url_for('home_blueprint.confirmation', order_id=order_id))
+        else:
+            for field, errors in card_form.errors.items():
+                for error in errors:
+                    flash(f'Error in {field}: {error}', 'danger')
+    else:
+        flash(f'Error submitting payment', 'danger')
 
 
-@blueprint.route('/create_order', methods=['GET', 'POST'])
+    return render_template('pages/payment.html', order=order, cash_form=cash_form, card_form=card_form)
+
+
+
+@blueprint.route('/order/create', methods=['GET', 'POST'])
 def create_order():
+    items = MenuItem.query.all()
     form = OrderForm()
     form.items.choices = [(item.id, f"{item.name} - ${item.price}") for item in MenuItem.query.all()]
     if form.validate_on_submit():
@@ -232,13 +225,14 @@ def create_order():
         )
         db.session.add(order)
         db.session.commit()
-        flash('Order placed successfully!', 'success')
-        return redirect(url_for('home_blueprint.confirmation', order_id=order.id))
+        flash('Order placed successfully! Redirecting to payment page...', 'success')
+        # Redirect the user to the payment page
+        return redirect(url_for('home_blueprint.payment', order_id=order.id))
     else:
         for field, errors in form.errors.items():
             for error in errors:
                 flash(f"Error in the {getattr(form, field).label.text} field - {error}", 'danger')
-    return render_template('pages/create_order.html', form=form)
+    return render_template('pages/create_order.html', form=form, menu_items=items)
 
 @blueprint.route('/orders')
 def list_orders():

@@ -1,27 +1,112 @@
-<body>
-    <div class="container mt-5">
-        <h1>Create Order</h1>
-        <form method="POST" action="{{ url_for('home_blueprint.create_order') }}">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.customer_name.label(class="form-control-label") }}
-                {{ form.customer_name(class="form-control", placeholder="Enter customer name") }}
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Menu</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="/menu">Menu</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Manage Menu Items</li>
+                </ul>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.email.label(class="form-control-label") }}
-                {{ form.email(class="form-control", placeholder="Enter email") }}
             </div>
-            <div class="form-group">
-                {{ form.phone_number.label(class="form-control-label") }}
-                {{ form.phone_number(class="form-control", placeholder="Enter phone number (optional)") }}
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Create an Order 🍔</h5>
+                        <p>Select what you would like to order!</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <form method="POST" action="{{ url_for('home_blueprint.create_order') }}">
+                                {{ form.hidden_tag() }}
+                                <div class="form-group">
+                                    {{ form.customer_name.label(class="form-control-label") }}
+                                    {{ form.customer_name(class="form-control", placeholder="Enter customer name") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.email.label(class="form-control-label") }}
+                                    {{ form.email(class="form-control", placeholder="Enter email") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.phone_number.label(class="form-control-label") }}
+                                    {{ form.phone_number(class="form-control", placeholder="Enter phone number (optional)") }}
+                                </div>
+                                <div class="form-group">
+                                    <h5>Menu Items:</h5>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Price</th>
+                                                <th>Select</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in menu_items %}
+                                                <tr>
+                                                    <td>{{ item.name }}</td>
+                                                    <td>${{ item.price }}</td>
+                                                    <td><input type="checkbox" name="items" value="{{ item.id }}"></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-group">
+                                    <h5>Total:</h5>
+                                    <p id="total">Total: $0.00</p>
+                                </div>
+                                <div class="form-group">
+                                    {{ form.submit(class="btn btn-primary") }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.items.label(class="form-control-label") }}
-                {{ form.items(class="form-control") }}
-            </div>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get all checkbox elements
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                
+                // Add event listener to each checkbox
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        // Calculate total price
+                        var total = 0;
+                        checkboxes.forEach(function(checkbox) {
+                            if (checkbox.checked) {
+                                var price = parseFloat(checkbox.parentElement.previousElementSibling.textContent.substring(1));
+                                total += price;
+                            }
+                        });
+                        
+                        // Update total display
+                        document.getElementById('total').textContent = 'Total: $' + total.toFixed(2);
+                    });
+                });
+            });
+        </script>
+
     </div>
-</body>
+</div>
+
+{% endblock %}
