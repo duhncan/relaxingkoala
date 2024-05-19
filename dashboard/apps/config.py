@@ -54,6 +54,10 @@ class Config(object):
 
         # This will create a file in <app> FOLDER
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+
+    # Allow File Uploads for Images
+    IMG_MENUITEM_UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/assets/images/menu_pics')
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # Limit the maximum size of uploaded files to 16 MB
     
 class ProductionConfig(Config):
     DEBUG = False
