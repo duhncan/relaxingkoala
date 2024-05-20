@@ -12,6 +12,8 @@ from apps.home.models import *
 from apps.home.forms import *
 from apps.home.utils import save_picture, delete_picture
 
+from apps.home.backend.report import Report 
+
 
 @blueprint.route("/index")
 @login_required
@@ -58,6 +60,9 @@ def table_page():
 @blueprint.route("/report-page")
 @login_required
 def report_page():
+    report = Report.generate_report()
+
+    # TODO: Insert report into template
     return render_template("pages/report-page.html")
 
 
