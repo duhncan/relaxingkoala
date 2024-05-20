@@ -9,10 +9,16 @@
 
 """
 
+from typing import Literal, List
+import apps.home.models as models
+
+MenuItem = models.MenuItem
 
 class Menu:
-    pass
+    type: Literal["Breakfast", "Lunch", "Dinner"]
+    items: List[MenuItem]
 
-
-class MenuItem:
-    pass
+    def __init__(self, type: Literal["Breakfast", "Lunch", "Dinner"],
+                 items: List[MenuItem]):
+        self.type = type
+        self.items = items
