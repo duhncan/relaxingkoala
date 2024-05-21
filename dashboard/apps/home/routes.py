@@ -72,19 +72,6 @@ def reservation_submit():
 def table_page():
     return render_template('pages/table-page.html')
 
-@blueprint.route('/confirm-reservation')
-@login_required
-def confirm_reservation():
-    
-    #   Add Logic to accept the table selection and reservation details. Then redirect to the success page
-    
-    return redirect(url_for('home_blueprint.reservation_success_page'))
-
-@blueprint.route('/reservation-success-page')
-@login_required
-def reservation_success_page():
-    return render_template('pages/reservation-success-page.html')
-
 @blueprint.route('/report-page')
 @login_required
 def report_page():
