@@ -37,7 +37,7 @@ class Report:
 
         report.busiest_hour = 0
         for o in orders:
-            report.busiest_hour += o.order_date.hmenu.get_busiest_hour()
+            report.busiest_hour += o.order_date.hour
         report.busiest_hour = report.busiest_hour // len(orders)
         report.total_earnings = sum((o.total_amount for o in orders))
 
