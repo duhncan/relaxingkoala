@@ -5,26 +5,9 @@
 {% block content %}
 <div class="pc-container">
     <div class="pc-content">
-        <div class="page-header">
-            <div class="page-block">
-                <div class="row align-items-center">
-                    <div class="col-md-12">
-                        <div class="page-header-title">
-                            <h5 class="m-b-10">Table Availability</h5>
-                        </div>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/reservation-page">Reservation</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Table Availability</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container py-5">
+        <div class="container py-2">
             <div class="row justify-content-center">
-                <div class="col-md-12">
+                <div class="col-md-10">
                     <div class="card shadow">
                         <div class="card-header bg-transparent border-0 text-center">
                             <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
@@ -99,7 +82,9 @@
                                 <ul class="pagination justify-content-center">
                                 </ul>
                             </nav>
-                            <button type="button" id="confirmBtn" class="btn btn-primary w-100" disabled>Confirm</button>
+                            <a id="confirmLink" href="#" onclick="event.preventDefault();">
+                                <button type="button" id="confirmBtn" class="btn btn-primary w-100" disabled>Confirm</button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -113,16 +98,27 @@
     const rows = document.querySelectorAll('.table tbody tr');
     const pageCount = Math.ceil(rows.length / rowsPerPage);
     let currentPage = 1;
-    
+
     document.querySelectorAll('.table tbody tr').forEach(row => {
-        row.addEventListener('click', function() {
+        row.addEventListener('click', function () {
             const current = document.querySelector('.table-selected');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const confirmLink = document.getElementById('confirmLink');
+
             if (current) current.classList.remove('table-selected');
-            row.classList.add('table-selected');
-            document.getElementById('confirmBtn').disabled = false;
+            if (row.classList.contains('table-danger')) {
+                confirmBtn.disabled = true;
+                confirmLink.href = "#";
+                confirmLink.onclick = function(event) { event.preventDefault(); };
+            } else {
+                row.classList.add('table-selected');
+                confirmBtn.disabled = false;
+                confirmLink.href = "{{ url_for('home_blueprint.reservation_success_page') }}"; 
+                confirmLink.onclick = null;
+            }
         });
     });
-    
+
     function setupPagination() {
         const paginationContainer = document.querySelector('.pagination');
         paginationContainer.innerHTML = '';
@@ -134,7 +130,7 @@
         prevLink.innerText = 'Previous';
         prevLi.appendChild(prevLink);
         paginationContainer.appendChild(prevLi);
-    
+
         for (let i = 1; i <= pageCount; i++) {
             const pageLi = document.createElement('li');
             pageLi.className = 'page-item';
@@ -142,11 +138,11 @@
             pageLink.className = 'page-link';
             pageLink.href = '#';
             pageLink.innerText = i;
-            pageLink.onclick = function() { setCurrentPage(i); };
+            pageLink.onclick = function () { setCurrentPage(i); };
             pageLi.appendChild(pageLink);
             paginationContainer.appendChild(pageLi);
         }
-    
+
         const nextLi = document.createElement('li');
         nextLi.className = 'page-item';
         const nextLink = document.createElement('a');
@@ -155,27 +151,27 @@
         nextLink.innerText = 'Next';
         nextLi.appendChild(nextLink);
         paginationContainer.appendChild(nextLi);
-    
+
         updatePaginationButtons();
     }
-    
+
     function updatePaginationButtons() {
         const paginationLinks = document.querySelectorAll('.pagination .page-link');
         paginationLinks.forEach(link => {
             const pageItem = link.parentElement;
             if (link.innerText === 'Previous') {
                 pageItem.classList.toggle('disabled', currentPage === 1);
-                link.onclick = function() { if (currentPage > 1) setCurrentPage(currentPage - 1); };
+                link.onclick = function () { if (currentPage > 1) setCurrentPage(currentPage - 1); };
             } else if (link.innerText === 'Next') {
                 pageItem.classList.toggle('disabled', currentPage === pageCount);
-                link.onclick = function() { if (currentPage < pageCount) setCurrentPage(currentPage + 1); };
+                link.onclick = function () { if (currentPage < pageCount) setCurrentPage(currentPage + 1); };
             } else {
                 const pageNumber = parseInt(link.innerText);
                 pageItem.classList.toggle('active', pageNumber === currentPage);
             }
         });
     }
-    
+
     function setCurrentPage(page) {
         currentPage = page;
         const start = (currentPage - 1) * rowsPerPage;
@@ -185,12 +181,12 @@
         });
         updatePaginationButtons();
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
+
+    document.addEventListener('DOMContentLoaded', function () {
         setupPagination();
         setCurrentPage(1); // Start with the first page
     });
-    </script>
-    
+</script>
+
 
 {% endblock %}

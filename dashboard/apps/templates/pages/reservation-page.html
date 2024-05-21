@@ -5,25 +5,9 @@
 {% block content %}
 <div class="pc-container">
     <div class="pc-content">
-        <div class="page-header">
-            <div class="page-block">
-                <div class="row align-items-center">
-                    <div class="col-md-12">
-                        <div class="page-header-title">
-                            <h5 class="m-b-10">Reservation Page</h5>
-                        </div>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Reservation Page</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container py-5">
+        <div class="container py-2">
             <div class="row justify-content-center">
-                <div class="col-md-6">
+                <div class="col-md-10">
                     <div class="card shadow">
                         <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
                             <img src="{{ url_for('static', filename='assets/images/user/koala-website.png') }}"
@@ -34,23 +18,23 @@
                         </div>
                         <div class="card-body">
                             <form action="{{ url_for('home_blueprint.reservation_submit') }}" method="post">
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="date" class="form-label">Date</label>
                                     <input type="date" class="form-control" id="date" name="date" required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="time" class="form-label">Time</label>
                                     <input type="time" class="form-control" id="time" name="time" required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="people" class="form-label">Number of People</label>
                                     <input type="number" class="form-control" id="people" name="people" required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="name" class="form-label">Your Name</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="phone" class="form-label">Contact Phone</label>
                                     <input type="tel" class="form-control" id="phone" name="phone" required>
                                 </div>
@@ -61,7 +45,11 @@
                 </div>
             </div>
         </div>
+
     </div>
+        
 </div>
+
+        </div>
 
 {% endblock %}

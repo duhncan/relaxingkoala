@@ -1,0 +1,34 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Reservation{% endblock %}
+
+{% block content %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="container py-2">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card shadow">
+                        <div style="position: absolute; top: 0; left: 0; z-index: 1000;">
+                            <img src="{{ url_for('static', filename='assets/images/user/koala-website.png') }}"
+                                alt="Koala" style="width: 70px; height: auto;">
+                        </div>
+                        <div class="card-header bg-transparent border-0 text-center">
+                            <h1>Successfully Reserve Table</h1>
+                        </div>
+                        <a href="{{ url_for('home_blueprint.home_page') }}" class="btn btn-primary w-100">Return to Home Page</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+        
+</div>
+
+        </div>
+
+{% endblock %}
+
