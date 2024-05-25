@@ -3,7 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, flash
 from flask_login import current_user, login_user, logout_user
 
 from apps import db, login_manager
@@ -11,7 +11,7 @@ from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
 from apps.authentication.models import Users
 
-from apps.authentication.util import verify_pass
+from apps.authentication.util import verify_pass, hash_pass
 
 
 @blueprint.route("/")
@@ -20,7 +20,6 @@ def route_default():
 
 
 # Login & Registration
-
 
 @blueprint.route("/login", methods=["GET", "POST"])
 def login():
@@ -92,6 +91,32 @@ def register():
 
     else:
         return render_template("accounts/register.html", form=create_account_form)
+
+
+@blueprint.route("/change_password/<int:user_id>", methods=["POST"])
+def change_password(user_id):
+    user = Users.query.get(user_id)
+    if user:
+        # Logic to change the password
+        # For simplicity, we'll set it to a default password 'newpassword'
+        new_password = hash_pass("newpassword")
+        user.password = new_password
+        db.session.commit()
+        flash("Password changed successfully.", "success")
+    else:
+        flash("User not found.", "danger")
+    return redirect(url_for("home_blueprint.manage_users"))
+
+@blueprint.route("/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+    user = Users.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        flash("User deleted successfully.", "success")
+    else:
+        flash("User not found.", "danger")
+    return redirect(url_for("home_blueprint.manage_users"))
 
 
 @blueprint.route("/logout")

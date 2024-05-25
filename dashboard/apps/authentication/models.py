@@ -10,6 +10,7 @@ from apps import db, login_manager
 from apps.authentication.util import hash_pass
 
 
+
 class Users(db.Model, UserMixin):
     __tablename__ = "Users"
 
@@ -17,6 +18,7 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(64), unique=True)
     password = db.Column(db.LargeBinary)
+    role = db.Column(db.String(50), nullable=False, default='customer')
 
     def __init__(self, **kwargs):
         for property, value in kwargs.items():

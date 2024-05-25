@@ -43,6 +43,8 @@
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Date</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Items</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Delivery Option</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Delivery Status</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -73,6 +75,12 @@
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <p class="mb-0 text-md">{{ order.payment_status }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ order.delivery_option }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ order.delivery_status }}</p>
                                             </td>
 
                                         </tr>

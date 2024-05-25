@@ -1,0 +1,9 @@
+
+
+
+<body>
+    <h1>Order Delivery</h1>
+    <form action="{{ url_for('pickup_order', order_id=order.id) }}" method="POST">
+        <button type="submit">Order Picked Up by Driver</button>
+    </form>
+</body>
