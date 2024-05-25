@@ -235,6 +235,7 @@ def create_order():
     return render_template("pages/create_order.html", form=form, menu_items=items)
 
 
+# For management Orders
 @blueprint.route("/orders")
 def list_orders():
     orders = Order.query.all()
