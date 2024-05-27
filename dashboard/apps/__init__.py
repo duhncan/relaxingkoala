@@ -65,6 +65,16 @@ def create_app(config):
     register_blueprints(app)
     configure_database(app)
 
+    # Register CLI Commands
+    try:
+        manager_commands_module = import_module("apps.manager.commands")
+        if hasattr(manager_commands_module, "cli"):
+            app.cli.add_command(manager_commands_module.cli)
+
+    except ImportError:
+        pass  # Ignore if manager commands module does not exist
+
+
     if not DEBUG and "CDN_DOMAIN" in app.config:
         cdn.init_app(app)
 
