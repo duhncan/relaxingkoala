@@ -8,7 +8,7 @@ __pycache__/
 
 # database & logs
 *.db
-*.sqlite3
+# *.sqlite3
 *.log
 
 # venv
@@ -33,3 +33,4 @@ apps/static/assets/.temp
 
 .env__
 
+venv

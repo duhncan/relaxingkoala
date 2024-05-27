@@ -1,0 +1,67 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Menu</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="/menu">Menu</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Add Menu Item</li>
+                </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-header">
+                    <h5>Create New Menu Item 🍔</h5>
+                    <p>Input the details for the new menu item.</p>
+                </div>
+                <div class="card-body">
+                    <h2 class="menu-section-title"></h2>
+                    <p></p>
+                    <div class="row">
+                        <form method="POST" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ form.name.label }} {{ form.name(class_='form-control') }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.price.label }} {{ form.price(class_='form-control') }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.image_file.label }} {{ form.image_file(class_='form-control-file') }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.submit(class_='btn btn-primary') }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock %}

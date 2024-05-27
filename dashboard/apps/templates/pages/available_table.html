@@ -1,0 +1,25 @@
+<body>
+    <div class="container">
+        <h1>Available Tables</h1>
+        {% if tables %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Table Number</th>
+                        <th>Number of Seats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for table in tables %}
+                    <tr>
+                        <td>{{ table.number }}</td>
+                        <td>{{ table.seats }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tables available for reservation at this time.</p>
+        {% endif %}
+    </div>
+</body>

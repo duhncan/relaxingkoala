@@ -1,0 +1,143 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+    <script>
+        function togglePaymentOption(option) {
+            if (option === 'cash') {
+                document.getElementById('cash-payment').style.display = 'block';
+                document.getElementById('card-payment').style.display = 'none';
+                // Disable card payment form fields
+                document.getElementById('card_payer_name').disabled = true;
+                document.getElementById('card_email').disabled = true;
+                document.getElementById('card_number').disabled = true;
+                document.getElementById('card_expiration_date').disabled = true;
+                document.getElementById('card_cvv').disabled = true;
+            } else if (option === 'card') {
+                document.getElementById('cash-payment').style.display = 'none';
+                document.getElementById('card-payment').style.display = 'block';
+                // Disable cash payment form fields
+                document.getElementById('cash_payer_name').disabled = true;
+                document.getElementById('cash_email').disabled = true;
+            }
+        }
+        function setPaymentMethod(method) {
+            document.getElementById('payment-method').value = method;
+        }
+    </script>
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Order</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="/order">Order</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Payment</li>
+                </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Payment</h5>
+                        <p>Payment is needed before we proceed! Fill in the details below.</p>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div style="display: flex;">
+                                <div style="flex: 1;">
+                                    <h1>Payment for Order {{ order.id }}</h1>
+                                    <h2>Total Amount: ${{ order.total_amount }}</h2>
+                                    <h3 class="center">Select Payment Method</h3>
+                                    <div>
+                                        <button onclick="togglePaymentOption('cash')">Pay with Cash</button>
+                                        <button onclick="togglePaymentOption('card')">Pay with Card</button>
+                                    </div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div id="cash-payment" style="display: none;">
+                                        <h4>Cash Payment</h4>
+                                        <form method="post" action="">
+                                            {{ cash_form.csrf_token }}
+                                            <input type="hidden" name="amount" value="{{ order.total_amount }}">
+                                            <input type="hidden" name="payment_type" value="cash">
+                                            <div>
+                                                {{ cash_form.payer_name.label }}<br>
+                                                {{ cash_form.payer_name }}
+                                            </div>
+                                            <div>
+                                                {{ cash_form.email.label }}<br>
+                                                {{ cash_form.email }}
+                                            </div>
+                                            <button type="submit" onclick="setPaymentMethod('cash')">Submit Cash Payment</button>
+                                        </form>
+                                    </div>
+                            
+                                    <div id="card-payment" ">
+                                        <form method="post" action="">
+                                            {{ card_form.csrf_token }}
+                                            <input type="hidden" name="amount" value="{{ order.total_amount }}">
+                                            <input type="hidden" name="payment_type" value="card">
+                                            <div>
+                                                <label for="card_payer_name">Payer Name</label><br>
+                                                <input type="text" id="card_payer_name" name="card_payer_name" value="">
+                                            </div>
+                                            <div>
+                                                <label for="card_email">Email</label><br>
+                                                <input type="email" id="card_email" name="card_email" value="">
+                                            </div>
+                                            <div>
+                                                <label for="card_number">Card Number</label><br>
+                                                {{ card_form.card_number(class="form-control", id="card_number") }}
+                                                {% for error in card_form.card_number.errors %}
+                                                    <span style="color: red;">{{ error }}</span><br>
+                                                {% endfor %}
+                                            </div>
+                                            <div>
+                                                <label for="card_expiration_date">Expiration Date</label><br>
+                                                {{ card_form.card_expiration_date(class="form-control", id="card_expiration_date") }}
+                                                {% for error in card_form.card_expiration_date.errors %}
+                                                    <span style="color: red;">{{ error }}</span><br>
+                                                {% endfor %}
+                                            </div>
+                                            <div>
+                                                <label for="card_cvv">CVV</label><br>
+                                                {{ card_form.card_cvv(class="form-control", id="card_cvv") }}
+                                                {% for error in card_form.card_cvv.errors %}
+                                                    <span style="color: red;">{{ error }}</span><br>
+                                                {% endfor %}
+                                            </div>
+                                            <button type="submit" onclick="setPaymentMethod('card')">Submit Card Payment</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

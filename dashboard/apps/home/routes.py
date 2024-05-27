@@ -70,7 +70,7 @@ def reservation_submit():
 @blueprint.route('/table-page')
 @login_required
 def table_page():
-    return render_template('pages/table-page.html')
+    return render_template('pages/table-page.html')  
 
 @blueprint.route('/report-page')
 @login_required

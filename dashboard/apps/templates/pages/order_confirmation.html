@@ -1,0 +1,83 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Order</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="/order">Order</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Payment Confirmation</li>
+                </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Order Confirmation</h5>
+                        <p>Thank you, {{ order.customer_name }}! Your order has been placed.</p>
+                        <p>You can see the details of your order below.</p>
+                        <div class="row">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Order Date</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Date</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Items</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <p class="mb-0 text-md">{{ order.customer_name }}</p>
+                                        </td>
+                                        <td>
+                                            <span class="mb-0 text-md">{{ order.email }}</span>
+                                        </td> 
+                                        <td class="align-middle text-center text-sm">
+                                            <p class="mb-0 text-md">${{ order.total_amount }}</p>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <p class="mb-0 text-md">{{ order.order_date }}</p>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <ul>
+                                                {% for item in order.items %}
+                                                <li>{{ item.name }} - ${{ item.price }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <p class="mb-0 text-md">{{ order.payment_status }}</p>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

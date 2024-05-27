@@ -1,0 +1,63 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+ <div class="pc-container">
+    <div class="pc-content">
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h5 class="m-b-10">Menu</h5>
+              </div>
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item" aria-current="page">Menu</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>Our delicious menu 🍔</h5>
+              <p>All the beautiful food we offer here at the Relaxing Koala.</p>
+            </div>
+            <div class="card-body">
+                <h2 class="menu-section-title"></h2>
+                <p></p>
+                <div class="row">
+                {% if items %}
+                    {% for item in items %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <img src="{{ url_for('static', filename='assets/images/menu_pics/' ~ item.image_file) }}" class="card-img-top" alt="PH Classic Meal">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.name}}</h5>
+                                <p class="card-text">${{item.price}}</p>
+                                <a href="#" class="btn btn-primary">Order Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <h5>Oh no. We don't currently have anything in offer! Check back later for our updated menu!</h5>
+                {% endif %}
+                </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<body>
+    <div class="container">
+        <h1>Add Table</h1>
+        <form method="POST" action="/add_table">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.number.label }} {{ form.number(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.seats.label }} {{ form.seats(class_='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class_='btn btn-primary') }}
+            </div>
+        </form>
+    </div>
+</body>
