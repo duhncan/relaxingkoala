@@ -77,6 +77,11 @@ def table_page():
 def report_page():
     return render_template('pages/report-page.html')  
 
+@blueprint.route('/contact-us')
+@login_required
+def contact_us_page():
+    return render_template('pages/contact-us.html') 
+
 def get_report(report_type):
     if report_type == 'sales':
         data = [{'Month': 'January', 'Revenue': 10000}, {'Month': 'February', 'Revenue': 15000}]
