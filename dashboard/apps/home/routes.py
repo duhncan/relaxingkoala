@@ -35,15 +35,6 @@ def table_page():
     return render_template("pages/table-page.html")
 
 
-@blueprint.route("/report-page")
-@login_required
-def report_page():
-    report = Report.generate_report()
-
-    # TODO: Insert report into template
-    return render_template("pages/report-page.html")
-
-
 def get_report(report_type):
     if report_type == "sales":
         data = [
@@ -374,7 +365,10 @@ def manage_users():
 @blueprint.route('/manager/reports', methods=['GET', 'POST'])
 @login_required
 def manager_reports():
-    return render_template('pages/report-page.html')
+    return render_template("pages/report-page.html",
+                           report=Report.generate_report())
+
+
 
 
 @blueprint.route("/<template>")

@@ -30,6 +30,7 @@ class Report:
                 else:
                     item_count[item] = 1
 
+        report.most_ordered_item = None
         for item, count in item_count.items():
             if (report.most_ordered_item is None
                     or count > item_count[report.most_ordered_item]):
