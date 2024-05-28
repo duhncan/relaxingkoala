@@ -1,0 +1,93 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Menu</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Manage</a></li>
+                </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-header">
+                    <h5>User Table</h5>
+                    <p>Below are all the users registered to the system.</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                              <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Password</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Delete</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% if users %}
+                                    {% for user in users %}
+                                        <tr>
+
+                                            <td>
+                                                <p class="mb-0 text-md">{{ user.id }}</p>
+                                            </td>
+                                            <td>
+                                                <span class="mb-0 text-md">{{ user.username }}</span>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ user.email }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ user.role }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <form action="{{ url_for('authentication_blueprint.change_password', user_id=user.id) }}" method="POST">
+                                                    <button type="submit" class="btn btn-primary btn-sm">Change Password</button>
+                                                </form>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <form action="{{ url_for('authentication_blueprint.delete_user', user_id=user.id) }}" method="POST">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <td>
+                                        <p class="mb-0 text-sm">No users registered at the moment.</p>
+                                    </td>
+                                {% endif %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+

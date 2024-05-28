@@ -78,6 +78,8 @@ class Order(db.Model):
         "MenuItem", secondary=order_items, backref="orders", lazy="dynamic"
     )
     order_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    delivery_option = db.Column(db.String(50), nullable=False, default="Pickup")  
+    delivery_status = db.Column(db.String(50), nullable=False, default="Pending")  
 
 
 class Table(db.Model):

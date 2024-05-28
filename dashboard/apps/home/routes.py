@@ -8,6 +8,8 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 import os
 
+from apps.authentication.models import Users
+from apps.authentication.forms import CreateAccountForm
 from apps.home.models import *
 from apps.home.forms import *
 from apps.home.utils import save_picture, delete_picture
@@ -25,30 +27,6 @@ def index():
 @login_required
 def home_page():
     return render_template("pages/home-page.html")
-
-
-@blueprint.route("/order-page")
-@login_required
-def order_page():
-    return render_template("pages/order-page.html")
-
-
-@blueprint.route("/reservation-page")
-@login_required
-def reservation_page():
-    return render_template("pages/reservation-page.html")
-
-
-@blueprint.route("/reservation_submit", methods=["POST"])
-@login_required
-def reservation_submit():
-    # Extract form data
-    date = request.form.get("date")
-    time = request.form.get("time")
-    people = request.form.get("people")
-    name = request.form.get("name")
-    phone = request.form.get("phone")
-    return redirect(url_for("home_blueprint.table_page"))
 
 
 @blueprint.route("/table-page")
@@ -107,6 +85,20 @@ def password_change():
 @blueprint.route("/accounts/password-change-done/")
 def password_change_done():
     return render_template("accounts/password_change_done.html")
+
+
+"""
+Customary Pages
+"""
+@blueprint.route("/contact")
+def contact():
+    return render_template("pages/about_us.html")
+
+
+@blueprint.route("/about")
+def about():
+    return render_template("pages/contact_us.html")
+
 
 
 """
@@ -250,6 +242,7 @@ def create_order():
             else None,  # Handle optional phone number
             items=items,
             total_amount=total_amount,
+            delivery_option=form.delivery_option.data,
         )
         db.session.add(order)
         db.session.commit()
@@ -266,16 +259,24 @@ def create_order():
     return render_template("pages/create_order.html", form=form, menu_items=items)
 
 
+# For management Orders
 @blueprint.route("/orders")
 def list_orders():
     orders = Order.query.all()
     return render_template("pages/list_orders.html", orders=orders)
 
 
+@blueprint.route('/order/<int:order_id>/pickup', methods=['POST'])
+def pickup_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    order.delivery_status = "Picked Up"
+    db.session.commit()
+    flash("Order picked up by driver!", "success")
+    return render_template("pages/delivery.html", order_id=order.id)
+
 """
 Reservation & Tables
 """
-
 
 @blueprint.route("/add_table", methods=["GET", "POST"])
 def add_table():
@@ -326,6 +327,16 @@ def reserve_table():
                 )
     return render_template("pages/reserve_table.html", form=form)
 
+@blueprint.route("/reservation_submit", methods=["POST"])
+def reservation_submit():
+    # Extract form data
+    date = request.form.get("date")
+    time = request.form.get("time")
+    people = request.form.get("people")
+    name = request.form.get("name")
+    phone = request.form.get("phone")
+    return redirect(url_for("home_blueprint.table_page"))
+
 
 @blueprint.route("/available_tables")
 def available_tables():
@@ -335,6 +346,35 @@ def available_tables():
     reserved_table_ids = [reservation.table_id for reservation in reservations]
     available_tables = Table.query.filter(~Table.id.in_(reserved_table_ids)).all()
     return render_template("pages/available_tables.html", tables=available_tables)
+
+"""
+Manager Functions
+"""
+
+
+@blueprint.route('/manager/users', methods=['GET', 'POST'])
+@login_required
+def manage_users():
+    users = Users.query.all()
+    create_account_form = CreateAccountForm(request.form)
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        new_role = request.form['role']
+        user = Users.query.get(user_id)
+        if user:
+            user.role = new_role
+            db.session.commit()
+            flash('User role updated successfully', 'success')
+        else:
+            flash('User not found', 'danger')
+        return redirect(url_for('manage_users'))
+
+    return render_template('pages/manage_users.html', users=users, form=create_account_form)
+
+@blueprint.route('/manager/reports', methods=['GET', 'POST'])
+@login_required
+def manager_reports():
+    return render_template('pages/report-page.html')
 
 
 @blueprint.route("/<template>")

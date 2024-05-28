@@ -53,6 +53,11 @@ class OrderForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     phone_number = StringField("Phone Number", validators=[Optional()])
     items = SelectMultipleField("Menu Items", coerce=int, validators=[DataRequired()])
+    delivery_option = SelectField(
+        "Delivery Option",
+        choices=[("Dine-in", "Dine-in"), ("Pickup", "Pickup"), ("Delivery", "Delivery")],
+        validators=[DataRequired()]
+    )
     submit = SubmitField("Place Order")
 
 
