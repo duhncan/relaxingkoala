@@ -120,14 +120,3 @@ class OrderSelectionForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Proceed to Payment")
 
-
-class CardPaymentForm(FlaskForm):
-    card_number = StringField(
-        "Card Number", validators=[DataRequired(), Length(min=16, max=16)]
-    )
-    card_expiration_date = StringField(
-        "Card Expiration Date (MM/YYYY)",
-        validators=[DataRequired(), Length(min=7, max=7)],
-    )
-    card_cvv = StringField("CVV", validators=[DataRequired(), Length(min=3, max=4)])
-    submit = SubmitField("Make Payment")

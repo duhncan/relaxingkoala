@@ -8,23 +8,28 @@
     <div class="pc-content">
     <script>
         function togglePaymentOption(option) {
-            if (option === 'cash') {
-                document.getElementById('cash-payment').style.display = 'block';
-                document.getElementById('card-payment').style.display = 'none';
-                // Disable card payment form fields
-                document.getElementById('card_payer_name').disabled = true;
-                document.getElementById('card_email').disabled = true;
-                document.getElementById('card_number').disabled = true;
-                document.getElementById('card_expiration_date').disabled = true;
-                document.getElementById('card_cvv').disabled = true;
-            } else if (option === 'card') {
-                document.getElementById('cash-payment').style.display = 'none';
-                document.getElementById('card-payment').style.display = 'block';
-                // Disable cash payment form fields
-                document.getElementById('cash_payer_name').disabled = true;
-                document.getElementById('cash_email').disabled = true;
-            }
+            // Set card form field disabled status
+            ['card_payer_name', 'card_email', 'card_number', 'card_expiration_date', 'card_cvv'].forEach((id) => {
+                try {
+                    document.getElementById(id).disabled = (option !== 'card');
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+
+            // Set cash form field disabled status
+            ['cash_payer_name', 'cash_email'].forEach((id) => {
+                try {
+                    document.getElementById(id).disabled = (option !== 'cash');
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+
+            document.getElementById('cash-payment').style.display = (option === 'cash' ? 'block' : 'none');
+            document.getElementById('card-payment').style.display = (option === 'card' ? 'block' : 'none');
         }
+
         function setPaymentMethod(method) {
             document.getElementById('payment-method').value = method;
         }
@@ -92,18 +97,19 @@
                                         </form>
                                     </div>
                             
-                                    <div id="card-payment" ">
+                                    <div id="card-payment">
+                                        <h4>Card Payment</h4>
                                         <form method="post" action="">
                                             {{ card_form.csrf_token }}
                                             <input type="hidden" name="amount" value="{{ order.total_amount }}">
                                             <input type="hidden" name="payment_type" value="card">
                                             <div>
-                                                <label for="card_payer_name">Payer Name</label><br>
-                                                <input type="text" id="card_payer_name" name="card_payer_name" value="">
+                                                {{ card_form.payer_name.label }}<br>
+                                                {{ card_form.payer_name }}
                                             </div>
                                             <div>
-                                                <label for="card_email">Email</label><br>
-                                                <input type="email" id="card_email" name="card_email" value="">
+                                                {{ card_form.email.label }}<br>
+                                                {{ card_form.email }}
                                             </div>
                                             <div>
                                                 <label for="card_number">Card Number</label><br>
