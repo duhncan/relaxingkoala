@@ -35,6 +35,16 @@ def table_page():
     return render_template("pages/table-page.html")
 
 
+@blueprint.route('/contact-us')
+@login_required
+def contact_us_page():
+    return render_template('pages/contact-us.html') 
+
+@blueprint.route('/about-us')
+@login_required
+def about_us_page():
+    return render_template('pages/about-us.html') 
+
 def get_report(report_type):
     if report_type == "sales":
         data = [

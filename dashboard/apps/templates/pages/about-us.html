@@ -1,0 +1,62 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="pc-container">
+    <h2 class="menu-section-title text-center">About Us</h2>
+    <p class="text-center">Welcome to Relaxing Koala Restaurant!Get to know the brilliant minds behind this project:</p>
+    
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h2 class="menu-section-title text-center">Frontend Developers</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4 animated fadeIn">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='assets/images/user/cartoonphoto.jpg') }}" alt="Koala" class="profile-photo">
+                    <h5 class="card-title">Towhidul Hassan</h5>
+                    <p class="card-text"><strong>ID Number:</strong> 103809763</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 animated fadeIn delay-1s">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='assets/images/user/cartoonphoto.jpg') }}" alt="Koala" class="profile-photo">
+                    <h5 class="card-title">Nhat Truong Pham</h5>
+                    <p class="card-text"><strong>ID Number:</strong> 103140116</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h2 class="menu-section-title text-center">Backend Developers</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4 animated fadeIn delay-2s">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='assets/images/user/cartoonphoto.jpg') }}" alt="Koala" class="profile-photo">
+                    <h5 class="card-title">Duhncan Guy</h5>
+                    <p class="card-text"><strong>ID Number:</strong> 102093756</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 animated fadeIn delay-3s">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='assets/images/user/cartoonphoto.jpg') }}" alt="Koala" class="profile-photo">
+                    <h5 class="card-title">Sadman Tariq</h5>
+                    <p class="card-text"><strong>ID Number:</strong> 103798780</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,351 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        .card-header h1 {
+            text-align: center;
+        }
+
+        .card-header {
+            background-color: transparent;
+        }
+
+        .card {
+            background-color: transparent;
+            border: none;
+        }
+
+        .contact-form .form-control {
+            border-radius: 30px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px 20px 10px 45px;
+            font-size: 16px;
+        }
+
+        .contact-form .btn-primary {
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #0066d3;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .contact-form .btn-primary:hover,
+        .contact-form .btn-primary:focus {
+            background-color: #004fa3;
+            outline: none;
+        }
+
+        .contact-form .btn-secondary {
+            border-radius: 30px;
+            padding: 10px 20px;
+            background-color: #ccc;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .contact-form .btn-secondary:hover,
+        .contact-form .btn-secondary:focus {
+            background-color: #aaa;
+            outline: none;
+        }
+
+        .contact-form .form-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .contact-form .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .modal-confirm {
+            color: #636363;
+            width: 325px;
+            font-size: 14px;
+
+        }
+
+        .modal-confirm .modal-content {
+            padding: 20px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .modal-confirm .modal-header {
+            border-bottom: none;
+            position: relative;
+        }
+
+        .modal-confirm h4 {
+            text-align: center;
+            font-size: 26px;
+            margin: 30px 0 -15px;
+        }
+
+        .modal-confirm .form-control,
+        .modal-confirm .btn {
+            min-height: 40px;
+            border-radius: 3px;
+        }
+
+        .modal-confirm .close {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        .modal-confirm .modal-footer {
+            border: none;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .modal-confirm .icon-box {
+            color: #fff;
+            position: absolute;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            top: -70px;
+            width: 95px;
+            height: 95px;
+            border-radius: 75%;
+            z-index: 9;
+            background: #82ce34;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-confirm .icon-box i {
+            font-size: 58px;
+            position: relative;
+            top: 3px;
+        }
+
+        .modal-confirm.modal-dialog {
+            margin-top: 80px;
+        }
+
+        .modal-confirm .btn {
+            color: #fff;
+            border-radius: 4px;
+            background: #82ce34;
+            text-decoration: none;
+            transition: all 0.4s;
+            line-height: normal;
+            border: none;
+        }
+
+        .modal-confirm .btn:hover,
+        .modal-confirm .btn:focus {
+            background: #6fb32b;
+            outline: none;
+        }
+
+        .dbox {
+            width: 100%;
+            margin-bottom: 25px;
+            padding: 0 20px;
+        }
+
+        @media (min-width: 768px) {
+            .dbox {
+                margin-bottom: 0;
+                padding: 0;
+            }
+        }
+
+        .dbox p {
+            margin-bottom: 0;
+        }
+
+        .dbox p span {
+            font-weight: 500;
+            color: #bc9864;
+            display: block;
+        }
+
+        .dbox .icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 75%;
+            background: #bc9864;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+        .dbox .icon span {
+            font-size: 60px;
+            color: #000;
+        }
+
+        .dbox .text {
+            width: 100%;
+        }
+    </style>
+</head>
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Contact Us</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Contact Us</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Contact Us 🍔</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 mb-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="dbox w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-map-marker"></span>
+                                        </div>
+                                        <div class="text">
+                                            <p><span>Address:</span> 123 John St, Hawthorn VIC 3122</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="dbox w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-phone"></span>
+                                        </div>
+                                        <div class="text">
+                                            <p><span>Phone:</span> <a href="tel://0234567890">+61 234 567 890</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="dbox w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-paper-plane"></span>
+                                        </div>
+                                        <div class="text">
+                                            <p><span>Email:</span> <a
+                                                    href="mailto:example@gmail.com">example@gmail.com</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt-2 mb-3 text-center">Have any issues or just want to ask a question?</h2>
+                        <h2 class="text-center mb-4">Get in touch with us!</h2>
+
+                        <div class="contact-form w-25">
+                            <form id="contactForm" onsubmit="return validateForm(event)">
+                                <div class="form-group">
+                                    <i class="fa fa-user form-icon"></i>
+                                    <input type="text" class="form-control" id="first_name" name="first_name"
+                                        placeholder="First Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fa fa-user form-icon"></i>
+                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                        placeholder="Last Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fa fa-envelope form-icon"></i>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fa fa-phone form-icon"></i>
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fa fa-comment form-icon"></i>
+                                    <textarea class="form-control" id="message" name="message" rows="6"
+                                        placeholder="Message" required></textarea>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-primary w-50 align-items-center justify-content-center">Send</button>
+                                </div>
+                                <div class="row justify-content-center mt-3">
+                                    <button type="reset"
+                                        class="btn btn-secondary w-25 justify-content-center">Reset</button>
+                                </div>
+                            </form>
+
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog modal-confirm">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <div class="icon-box">
+                                                <i class="material-icons">&#xE876;</i>
+                                            </div>
+                                            <h4 class="modal-title w-100">Thank You</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-center">Your message has been sent.</p>
+                                            <p class="text-center">We will response within 5 business days.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="/home-page" class="btn btn-success btn-block">Return to Home
+                                                Page</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            var form = document.getElementById('contactForm');
+            if (form.checkValidity()) {
+                $('#myModal').modal('show');
+            } else {
+                form.reportValidity();
+            }
+        }
+    </script>
+
+    {% endblock %}
