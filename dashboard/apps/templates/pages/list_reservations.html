@@ -1,0 +1,82 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block content %}
+
+<div class="pc-container">
+    <div class="pc-content">
+
+        <div class="page-header">
+            <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-12">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Reservations</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Reservations</li>
+                </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-header">
+                    <h5>Reservations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                              <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Customer Name</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phone No.</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Table Number</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reservation Date/Time</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% if reservations %}
+                                    {% for res in reservations %}
+                                        <tr>
+                                            <td>
+                                                <p class="mb-0 text-md">{{ res.customer_name }}</p>
+                                            </td>
+                                            <td>
+                                                <span class="mb-0 text-md">{{ res.email }}</span>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ res.phone_number }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">${{ res.table_id }}</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <p class="mb-0 text-md">{{ res.reservation_time }}</p>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <td>
+                                        <p class="mb-0 text-sm">No reservations at the moment. Wait for customers to make a reservation!</p>
+                                    </td>
+                                {% endif %}
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -322,6 +322,13 @@ def reserve_table():
 
     return render_template("pages/reserve_table.html", form=form)
 
+
+@blueprint.route("/reservations")
+def list_reservations():
+    return render_template("pages/list_reservations.html",
+                           reservations=Reservation.query.all())
+
+
 @blueprint.route("/reservation_submit", methods=["POST"])
 def reservation_submit():
     # Extract form data
