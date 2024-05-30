@@ -5,9 +5,9 @@
 {% block content %}
 <div class="pc-container">
   <div class="text-center my-4">
-    <button id="dinein-btn" type="button" class="btn btn-outline-primary me-2" onclick="selectButton('dinein-btn')">Dine In</button>
-    <button id="takeaway-btn" type="button" class="btn btn-secondary me-2 active" onclick="selectButton('takeaway-btn')">Take Away</button>
-    <button id="delivery-btn" type="button" class="btn btn-outline-success" onclick="selectButton('delivery-btn')">Delivery</button>
+    <button id="dinein-btn" type="button" class="btn btn-outline-primary me-2" onclick="selectOrderType('dinein-btn')">Dine In</button>
+    <button id="takeaway-btn" type="button" class="btn btn-outline-secondary me-2 active" onclick="selectOrderType('takeaway-btn')">Take Away</button>
+    <button id="delivery-btn" type="button" class="btn btn-outline-success" onclick="selectOrderType('delivery-btn')">Delivery</button>
   </div>
   <h1 class="text-center my-4">Order Food Online</h1>
   <div class="row">
@@ -73,7 +73,7 @@
               <strong>$40.47</strong>
             </li>
           </ul>
-          <button class="btn btn-primary w-100 mt-3">Checkout</button>
+          <button class="btn btn-primary w-100 mt-3" onclick="validateOrder()">Checkout</button>
         </div>
       </div>
     </div>
@@ -81,37 +81,39 @@
 </div>
 
 <script>
-  function selectButton(selectedId) {
+  function selectOrderType(selectedId) {
     const buttons = ['dinein-btn', 'takeaway-btn', 'delivery-btn'];
-    buttons.forEach(buttonId => {
-      const button = document.getElementById(buttonId);
-      if (buttonId === selectedId) {
+    buttons.forEach(id => {
+      const button = document.getElementById(id);
+      if (id === selectedId) {
         button.classList.add('active');
         button.classList.remove('btn-outline-primary', 'btn-outline-secondary', 'btn-outline-success');
-        if (buttonId === 'dinein-btn') {
-          button.classList.add('btn-primary');
-        } else if (buttonId === 'takeaway-btn') {
-          button.classList.add('btn-secondary');
-        } else if (buttonId === 'delivery-btn') {
-          button.classList.add('btn-success');
-        }
+        button.classList.add('btn-primary', 'btn-secondary', 'btn-success');
       } else {
         button.classList.remove('active');
-        if (buttonId === 'dinein-btn') {
-          button.classList.remove('btn-primary');
-          button.classList.add('btn-outline-primary');
-        } else if (buttonId === 'takeaway-btn') {
-          button.classList.remove('btn-secondary');
-          button.classList.add('btn-outline-secondary');
-        } else if (buttonId === 'delivery-btn') {
-          button.classList.remove('btn-success');
-          button.classList.add('btn-outline-success');
-        }
+        button.classList.add('btn-outline-primary', 'btn-outline-secondary', 'btn-outline-success');
+        button.classList.remove('btn-primary', 'btn-secondary', 'btn-success');
       }
     });
   }
 
-  // Initialize the default selected button
-  document.getElementById('takeaway-btn').classList.add('active');
+  function validateOrder() {
+    // Example validation logic
+    const items = document.querySelectorAll('.list-group-item');
+    if (items.length === 0) {
+      alert('Please add at least one item to your order.');
+      return false;
+    }
+
+    const orderType = document.querySelector('.btn.active');
+    if (!orderType) {
+      alert('Please select an order type (Dine In, Take Away, or Delivery).');
+      return false;
+    }
+
+    // Add more validation as needed
+    alert('Order validated successfully!');
+    // Proceed with order submission
+  }
 </script>
 {% endblock %}
