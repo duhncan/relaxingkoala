@@ -288,6 +288,7 @@ def reserve_table():
         (table.id, f"Table {table.number} - {table.seats} seats")
         for table in Table.query.all()
     ]
+
     if form.validate_on_submit():
         try:
             reservation_date = datetime.utcnow().date()
@@ -302,10 +303,12 @@ def reserve_table():
                 table_id=form.table_id.data,
                 reservation_time=reservation_datetime,
             )
+            print(reservation)
             db.session.add(reservation)
             db.session.commit()
+
             flash("Table reserved successfully!", "success")
-            return redirect(url_for(".reserve_table"))
+            return redirect(url_for("home_blueprint.home_page"))
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", "danger")
@@ -316,6 +319,7 @@ def reserve_table():
                     f"Error in the {getattr(form, field).label.text} field - {error}",
                     "danger",
                 )
+
     return render_template("pages/reserve_table.html", form=form)
 
 @blueprint.route("/reservation_submit", methods=["POST"])
