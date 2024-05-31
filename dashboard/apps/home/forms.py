@@ -13,6 +13,8 @@ from wtforms import (
 from wtforms.validators import DataRequired, Email, NumberRange, Length, Optional
 from flask_wtf.file import FileAllowed
 
+from datetime import datetime, time, timedelta
+
 
 class PaymentForm(FlaskForm):
     payer_name = StringField("Payer Name", validators=[DataRequired()])
@@ -101,6 +103,51 @@ class ReservationForm(FlaskForm):
     )
     submit = SubmitField("Reserve Table")
 
+    def __init__(self, *args, **kwargs):
+        super(ReservationForm, self).__init__(*args, **kwargs)
+        
+        # Generate choices for reservation time based on current date and time
+        self.reservation_time.choices = self.generate_reservation_time_choices()
+
+    def generate_reservation_time_choices(self):
+        # Get current date and time
+        current_date = datetime.now().date()
+        current_time = datetime.now().time()
+
+        # Calculate the end date for the booking window (2 weeks in advance)
+        end_date = current_date + timedelta(days=14)
+
+        # Set the start and end times for reservations (9 AM to 9 PM)
+        start_time = time(9, 0)
+        end_time = time(21, 0)
+
+        # If current time is before 9 AM, start from 9 AM of the current day
+        if current_time < start_time:
+            current_datetime = datetime.combine(current_date, start_time)
+        # If current time is after 9 PM, start from 9 AM of the next day
+        elif current_time >= end_time:
+            current_date += timedelta(days=1)
+            current_datetime = datetime.combine(current_date, start_time)
+        # Otherwise, start from the next half-hour slot
+        else:
+            current_datetime = datetime.combine(current_date, current_time)
+            current_datetime += timedelta(minutes=(30 - current_datetime.minute % 30))
+
+        choices = []
+
+        # Generate choices from current time to 9 PM for dates within the booking window
+        while current_date <= end_date:
+            # Only add times for the current date if it's within the booking window
+            if current_date == end_date or current_date < end_date:
+                # Include both date and time in the choice tuple
+                choice = (current_datetime.strftime('%Y-%m-%d %H:%M'), current_datetime.strftime('%d/%m/%Y %I:%M %p'))
+                choices.append(choice)
+            current_datetime += timedelta(minutes=30)
+            if current_datetime.time() >= end_time:
+                current_date += timedelta(days=1)
+                current_datetime = datetime.combine(current_date, start_time)
+
+        return choices
 
 class OrderSearchForm(FlaskForm):
     search_query = StringField(

@@ -39,7 +39,6 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Password</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Delete</th>
                               </tr>
                             </thead>
@@ -59,11 +58,6 @@
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <p class="mb-0 text-md">{{ user.role }}</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <form action="{{ url_for('authentication_blueprint.change_password', user_id=user.id) }}" method="POST">
-                                                    <button type="submit" class="btn btn-primary btn-sm">Change Password</button>
-                                                </form>
                                             </td>
                                             <td class="align-middle text-center text-sm">
                                                 <form action="{{ url_for('authentication_blueprint.delete_user', user_id=user.id) }}" method="POST">

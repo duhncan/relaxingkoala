@@ -61,7 +61,7 @@ class MenuItem(db.Model):
     price = db.Column(db.Float, nullable=False)
     image_file = db.Column(
         db.String(100), nullable=True, default="default.jpg"
-    )  # Add this line
+    )
 
     def __repr__(self):
         return f"MenuItem('{self.name}', '{self.price}', '{self.image_file}')"

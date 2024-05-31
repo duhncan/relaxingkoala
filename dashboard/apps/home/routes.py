@@ -35,16 +35,6 @@ def table_page():
     return render_template("pages/table-page.html")
 
 
-@blueprint.route('/contact-us')
-@login_required
-def contact_us_page():
-    return render_template('pages/contact-us.html') 
-
-@blueprint.route('/about-us')
-@login_required
-def about_us_page():
-    return render_template('pages/about-us.html') 
-
 def get_report(report_type):
     if report_type == "sales":
         data = [
@@ -93,12 +83,12 @@ Customary Pages
 """
 @blueprint.route("/contact")
 def contact():
-    return render_template("pages/about_us.html")
+    return render_template("pages/about-us.html")
 
 
 @blueprint.route("/about")
 def about():
-    return render_template("pages/contact_us.html")
+    return render_template("pages/contact-us.html")
 
 
 
@@ -301,11 +291,12 @@ def reserve_table():
 
     if form.validate_on_submit():
         try:
-            reservation_date = datetime.utcnow().date()
-            reservation_time_str = form.reservation_time.data
+            # Parse the reservation datetime from the form data
+            reservation_datetime_str = form.reservation_time.data
             reservation_datetime = datetime.strptime(
-                f"{reservation_date} {reservation_time_str}", "%Y-%m-%d %H:%M"
+                reservation_datetime_str, '%Y-%m-%d %H:%M'
             )
+
             reservation = Reservation(
                 customer_name=form.customer_name.data,
                 email=form.email.data,
@@ -313,25 +304,28 @@ def reserve_table():
                 table_id=form.table_id.data,
                 reservation_time=reservation_datetime,
             )
-            print(reservation)
             db.session.add(reservation)
             db.session.commit()
 
             flash("Table reserved successfully!", "success")
             return redirect(url_for("home_blueprint.home_page"))
         except Exception as e:
+            print("Reservation alidation Error")
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", "danger")
     else:
+        print("Reservation Error")
         for field, errors in form.errors.items():
             for error in errors:
                 flash(
                     f"Error in the {getattr(form, field).label.text} field - {error}",
                     "danger",
                 )
+                print(f"Error in the {getattr(form, field).label.text} field - {error}",
+                    "danger",
+                )
 
     return render_template("pages/reserve_table.html", form=form)
-
 
 @blueprint.route("/reservations")
 def list_reservations():

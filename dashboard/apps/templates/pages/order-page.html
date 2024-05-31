@@ -4,25 +4,116 @@
 
 {% block content %}
 <div class="pc-container">
-  <h1 class="text-center my-4">Place Your Order</h1>
-  <form  method="post">
-    <div class="mb-3">
-      <label for="itemName" class="form-label">Item Name</label>
-      <input type="text" class="form-control" id="itemName" name="itemName" required>
+  <div class="text-center my-4">
+    <button id="dinein-btn" type="button" class="btn btn-outline-primary me-2" onclick="selectOrderType('dinein-btn')">Dine In</button>
+    <button id="takeaway-btn" type="button" class="btn btn-outline-secondary me-2 active" onclick="selectOrderType('takeaway-btn')">Take Away</button>
+    <button id="delivery-btn" type="button" class="btn btn-outline-success" onclick="selectOrderType('delivery-btn')">Delivery</button>
+  </div>
+  <h1 class="text-center my-4">Order Food Online</h1>
+  <div class="row">
+    <div class="col-lg-8">
+      <h3>Starters</h3>
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ url_for('static', filename='images/bbq_chicken_salad.jpg') }}" class="img-fluid rounded-start" alt="BBQ Chicken Salad">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">BBQ Chicken Salad</h5>
+              <p class="card-text">A classic salad with lettuce, red onion, lentils, and chicken marinated in barbeque sauce.</p>
+              <p class="card-text"><strong>$7.50</strong></p>
+              <button class="btn btn-primary">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ url_for('static', filename='images/olives_marinate.jpg') }}" class="img-fluid rounded-start" alt="Olives Marinate">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Olives Marinate</h5>
+              <p class="card-text">Marinated pitted olives with whole garlic cloves, herbs, and peppercorns.</p>
+              <p class="card-text"><strong>$3.99</strong></p>
+              <button class="btn btn-primary">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat similar blocks for other items like Bruschetta, Pizzas etc. -->
     </div>
-    <div class="mb-3">
-      <label for="quantity" class="form-label">Quantity</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" required>
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="card-title mb-0">Your Order</h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Lemonade</span>
+              <span>1 x $3.00</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>BBQ Chicken Salad</span>
+              <span>1 x $7.50</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Olives Marinate</span>
+              <span>1 x $3.99</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>Pizza Margherita - 12"</span>
+              <span>2 x $12.99</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>Subtotal:</strong>
+              <strong>$40.47</strong>
+            </li>
+          </ul>
+          <button class="btn btn-primary w-100 mt-3" onclick="validateOrder()">Checkout</button>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="customerName" class="form-label">Your Name</label>
-      <input type="text" class="form-control" id="customerName" name="customerName" required>
-    </div>
-    <div class="mb-3">
-      <label for="customerAddress" class="form-label">Delivery Address</label>
-      <input type="text" class="form-control" id="customerAddress" name="customerAddress" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit Order</button>
-  </form>
+  </div>
 </div>
+
+<script>
+  function selectOrderType(selectedId) {
+    const buttons = ['dinein-btn', 'takeaway-btn', 'delivery-btn'];
+    buttons.forEach(id => {
+      const button = document.getElementById(id);
+      if (id === selectedId) {
+        button.classList.add('active');
+        button.classList.remove('btn-outline-primary', 'btn-outline-secondary', 'btn-outline-success');
+        button.classList.add('btn-primary', 'btn-secondary', 'btn-success');
+      } else {
+        button.classList.remove('active');
+        button.classList.add('btn-outline-primary', 'btn-outline-secondary', 'btn-outline-success');
+        button.classList.remove('btn-primary', 'btn-secondary', 'btn-success');
+      }
+    });
+  }
+
+  function validateOrder() {
+    // Example validation logic
+    const items = document.querySelectorAll('.list-group-item');
+    if (items.length === 0) {
+      alert('Please add at least one item to your order.');
+      return false;
+    }
+
+    const orderType = document.querySelector('.btn.active');
+    if (!orderType) {
+      alert('Please select an order type (Dine In, Take Away, or Delivery).');
+      return false;
+    }
+
+    // Add more validation as needed
+    alert('Order validated successfully!');
+    // Proceed with order submission
+  }
+</script>
 {% endblock %}

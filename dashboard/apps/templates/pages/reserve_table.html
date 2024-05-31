@@ -33,10 +33,17 @@
                         <div class="row">
                             <form method="POST" action="{{ url_for('home_blueprint.reserve_table') }}">
                                 {{ form.hidden_tag() }}
-                                {% for field in (form.customer_name, form.email, form.phone_number, form.table_id, form.reservation_time) %}
+                                {% for field in form if field.name not in ['csrf_token', 'submit'] %}
                                     <div class="form-group">
                                         {{ field.label(class="form-control-label") }}
                                         {{ field(class="form-control") }}
+                                        {% if field.errors %}
+                                            <ul class="errors">
+                                                {% for error in field.errors %}
+                                                    <span style="color: red;">{{ error }}</span><br>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                                 <div class="form-group">
