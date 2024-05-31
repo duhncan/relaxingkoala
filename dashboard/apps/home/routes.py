@@ -14,6 +14,8 @@ from apps.home.models import *
 from apps.home.forms import *
 from apps.home.utils import save_picture, delete_picture
 
+from apps.home.backend.report import Report 
+
 
 @blueprint.route("/index")
 @login_required
@@ -31,6 +33,29 @@ def home_page():
 @login_required
 def table_page():
     return render_template("pages/table-page.html")
+
+
+@blueprint.route('/contact-us')
+@login_required
+def contact_us_page():
+    return render_template('pages/contact-us.html') 
+
+@blueprint.route('/about-us')
+@login_required
+def about_us_page():
+    return render_template('pages/about-us.html') 
+
+def get_report(report_type):
+    if report_type == "sales":
+        data = [
+            {"Month": "January", "Revenue": 10000},
+            {"Month": "February", "Revenue": 15000},
+        ]
+    elif report_type == "items_sold":
+        data = [{"Item": "Widget", "Sold": 120}, {"Item": "Gadget", "Sold": 90}]
+    else:
+        data = []
+    return jsonify(data)
 
 
 @blueprint.route("/accounts/password-reset/")
@@ -273,6 +298,7 @@ def reserve_table():
         (table.id, f"Table {table.number} - {table.seats} seats")
         for table in Table.query.all()
     ]
+
     if form.validate_on_submit():
         try:
             reservation_date = datetime.utcnow().date()
@@ -287,10 +313,12 @@ def reserve_table():
                 table_id=form.table_id.data,
                 reservation_time=reservation_datetime,
             )
+            print(reservation)
             db.session.add(reservation)
             db.session.commit()
+
             flash("Table reserved successfully!", "success")
-            return redirect(url_for(".reserve_table"))
+            return redirect(url_for("home_blueprint.home_page"))
         except Exception as e:
             db.session.rollback()
             flash(f"An error occurred: {str(e)}", "danger")
@@ -301,7 +329,15 @@ def reserve_table():
                     f"Error in the {getattr(form, field).label.text} field - {error}",
                     "danger",
                 )
+
     return render_template("pages/reserve_table.html", form=form)
+
+
+@blueprint.route("/reservations")
+def list_reservations():
+    return render_template("pages/list_reservations.html",
+                           reservations=Reservation.query.all())
+
 
 @blueprint.route("/reservation_submit", methods=["POST"])
 def reservation_submit():
@@ -350,7 +386,10 @@ def manage_users():
 @blueprint.route('/manager/reports', methods=['GET', 'POST'])
 @login_required
 def manager_reports():
-    return render_template('pages/report-page.html')
+    return render_template("pages/report-page.html",
+                           report=Report.generate_report())
+
+
 
 
 @blueprint.route("/<template>")

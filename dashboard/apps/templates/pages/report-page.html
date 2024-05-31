@@ -17,19 +17,26 @@
                 <div class="col-md-8">
                     <div class="card shadow">
                         <div class="card-header bg-transparent border-0 text-center">
-                            <h1>Select Report Type</h1>
+                            <h1 class="text-start">Sales Report</h1>
+                            <h4 class="text-start card-subtitle text-muted">
+                                Generated at:
+                                {{ report.time_generated.strftime("%d/%m/%Y %H:%M:%S") }}
+                            </h4>
                         </div>
                         <div class="card-body">
-                            <form id="reportForm" method="post">
-                                <div class="mb-4">
-                                    <label for="reportType" class="form-label">Report Type</label>
-                                    <select class="form-control" id="reportType" name="reportType">
-                                        <option value="sales">Sales (Finances / Total Revenue)</option>
-                                        <option value="items_sold">Most Sold Items</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Generate Report</button>
-                            </form>
+                            Most Ordered Item: {{ report.most_ordered_item.name }} (${{ report.most_ordered_item.price }})<br />
+                            Total Revenue: {{ report.total_earnings }} <br />
+                            Busiest Hour: {{ report.busiest_hour }}:00 <br />
+                            <!-- <form id="reportForm" method="post"> -->
+                            <!--     <div class="mb-4"> -->
+                            <!--         <label for="reportType" class="form-label">Report Type</label> -->
+                            <!--         <select class="form-control" id="reportType" name="reportType"> -->
+                            <!--             <option value="sales">Sales (Finances / Total Revenue)</option> -->
+                            <!--             <option value="items_sold">Most Sold Items</option> -->
+                            <!--         </select> -->
+                            <!--     </div> -->
+                            <!--     <button type="submit" class="btn btn-primary w-100">Generate Report</button> -->
+                            <!-- </form> -->
                         </div>
                     </div>
                     <div id="reportOutput" class="card mt-4">
@@ -40,7 +47,7 @@
         </div>
     </div>
 </div>
-<script>
+<!--script>
     document.getElementById('reportForm').onsubmit = function(event) {
         event.preventDefault();
         fetchReport();
@@ -73,5 +80,5 @@
                 console.error('Error fetching report:', error);
             });
     }
-</script>
+</script-->
 {% endblock %}
