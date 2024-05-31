@@ -28,11 +28,13 @@
             <span class="pc-mtext">Order</span></a>
         </li>
 
+        {% if current_user._get_role != "customer" %}
         <li class="pc-item">
           <a href="/orders" class="pc-link">
             <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
             <span class="pc-mtext">Orders</span></a>
         </li>
+        {% endif %}
 
         <li class="pc-item">
           <a href="/reserve_table" class="pc-link">
@@ -40,6 +42,7 @@
             <span class="pc-mtext">Make Reservation</span></a>
         </li>
 
+        {% if current_user._get_role != "customer" %}
         <li class="pc-item">
           <a href="/reservations" class="pc-link">
             <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
@@ -51,6 +54,7 @@
             <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
             <span class="pc-mtext">Manage Menu</span></a>
         </li>
+        
 
         <li class="pc-item">
           <a href="/menu/add_item" class="pc-link">
@@ -69,6 +73,8 @@
             <span class="pc-micon"><i class="ti ti-tag"></i></span>
             <span class="pc-mtext">Reports</span></a>
         </li>
+        {% endif %}
+
 
         <li class="pc-item">
           <a href="/about" class="pc-link">
